@@ -1,6 +1,7 @@
 
 use clap::{Parser,Subcommand};
 use log::info;
+use tmf_client::{Operations, TMFClient};
 
 #[derive(Parser,Debug)]
 struct Args {
@@ -32,10 +33,14 @@ fn main() {
         None => String::from("http://localhost:8000"),
     };
         
-    info!("Using host :\t{}",&host);  
+    info!("Using host :\t{}",&host); 
+
+    let mut client = TMFClient::new(host);
 
     match args.tmf {
-        Some(TMF::TMF620) => todo!(),
+        Some(TMF::TMF620) => {
+            let _cat = client.tmf620().catalog().list(None);
+        },
         Some(TMF::TMF622) => todo!(),
         Some(TMF::TMF629) => todo!(),
         None => info!("Please choose an option"),
