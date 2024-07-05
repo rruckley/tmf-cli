@@ -2,6 +2,8 @@
 use clap::{Parser,Subcommand};
 use log::info;
 use tmf_client::{Operations, TMFClient};
+use tmf_client::common::tmf_error::TMFError;
+use tmflib::{HasId,HasName};
 
 #[derive(Parser,Debug)]
 struct Args {
@@ -19,7 +21,7 @@ pub enum TMF {
     TMF629,
 }
 
-fn main() {
+fn main() -> Result<(),TMFError> {
     let pkg = env!("CARGO_PKG_NAME");
     let ver = env!("CARGO_PKG_VERSION");
     env_logger::init();
@@ -39,10 +41,25 @@ fn main() {
 
     match args.tmf {
         Some(TMF::TMF620) => {
-            let _cat = client.tmf620().catalog().list(None);
+            let cat = client.tmf620().catalog().list(None)?;
+            cat.iter().for_each(|c| {
+                info!("Catalog: {} [{}]",c.get_name(),c.get_id());
+            });
+            Ok(())
         },
-        Some(TMF::TMF622) => todo!(),
-        Some(TMF::TMF629) => todo!(),
-        None => info!("Please choose an option"),
+        Some(TMF::TMF622) => {
+            let order = client.tmf622().order().list(None)?;
+            order.iter().for_each(|o| {
+                info!("Order: {} [{}]",o.description.clone().unwrap_or("No description".to_string()),o.get_id());
+            });
+            Ok(())
+        }
+        Some(TMF::TMF629) => {
+            Err(TMFError::from("tmf-client: TMF629 not implemented"))
+        },
+        None => {
+            info!("Please choose an option");
+            Ok(())
+        },
     }
 }
