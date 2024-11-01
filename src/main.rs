@@ -25,7 +25,7 @@ fn main() -> Result<(),TMFError> {
     let pkg = env!("CARGO_PKG_NAME");
     let ver = env!("CARGO_PKG_VERSION");
     env_logger::init();
-    info!(" {} v{}",pkg,ver);
+    info!("Version\t: {} v{}",pkg,ver);
 
     let args = Args::parse();
 
@@ -35,7 +35,7 @@ fn main() -> Result<(),TMFError> {
         None => String::from("http://localhost:8000"),
     };
         
-    info!("Using host :\t{}",&host); 
+    info!("Host\t: {}",&host); 
 
     let mut client = TMFClient::new(host);
 
@@ -43,14 +43,14 @@ fn main() -> Result<(),TMFError> {
         Some(TMF::TMF620) => {
             let cat = client.tmf620().catalog().list(None)?;
             cat.iter().for_each(|c| {
-                info!("Catalog: {} [{}]",c.get_name(),c.get_id());
+                info!("Catalog\t: {} [{}]",c.get_name(),c.get_id());
             });
             Ok(())
         },
         Some(TMF::TMF622) => {
             let order = client.tmf622().order().list(None)?;
             order.iter().for_each(|o| {
-                info!("Order: {} [{}]",o.description.clone().unwrap_or("No description".to_string()),o.get_id());
+                info!("Order\t: {} [{}]",o.description.clone().unwrap_or("No description".to_string()),o.get_id());
             });
             Ok(())
         }
