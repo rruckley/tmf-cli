@@ -32,7 +32,7 @@ fn main() -> Result<(),TMFError> {
     // Find a host
     let host = match args.host {
         Some(h) => h,
-        None => String::from("http://localhost:8000"),
+        None => String::from("http://localhost:8001"),
     };
         
     info!("Host\t: {}",&host); 
