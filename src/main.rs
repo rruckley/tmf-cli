@@ -20,17 +20,17 @@ struct Args {
     tmf : TMFModules,
 
     #[clap(global = true)]
-    #[arg(short = 'l')]
-    limit: Option<u32>,
+    #[arg(short = 'l',long)]
+    limit: Option<u16>,
 
     #[clap(global = true)]
-    #[arg(short = 'o')]
-    offset: Option<u32>,
+    #[arg(short = 'o',long)]
+    offset: Option<u16>,
+
+    #[clap(global = true)]
+    #[arg(short = 'n', long)]
+    name: Option<String>,
 }
-
-
-
-
 
 #[derive(Subcommand,Debug)]
 pub enum TMFModules {
@@ -41,9 +41,6 @@ pub enum TMFModules {
 }
 
 
-
-
-
 fn main() -> Result<(),TMFError> {
     let pkg = env!("CARGO_PKG_NAME");
     let ver = env!("CARGO_PKG_VERSION");
@@ -51,6 +48,17 @@ fn main() -> Result<(),TMFError> {
     info!("Version\t: {} v{}",pkg,ver);
 
     let args = Args::parse();
+
+    let mut opts = tmf_client::QueryOptions::default();
+    if let Some(l) = args.limit {
+        opts = opts.limit(l);
+    };
+    if let Some(o) = args.offset {
+        opts = opts.offset(o);
+    };
+    if let Some(n) = args.name {
+        opts = opts.name(n);
+    }
 
     // Find a host
     let host = match args.hostname {
@@ -64,7 +72,7 @@ fn main() -> Result<(),TMFError> {
 
     match args.tmf {
         TMFModules::TMF620 { module } => {
-            handle_tmf620(&mut client, module)
+            handle_tmf620(&mut client, module, Some(opts))
         }
     }
 }
