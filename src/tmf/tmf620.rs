@@ -3,12 +3,17 @@
 use clap::Subcommand;
 
 use super::{
-    TMFOperation,
-    iterate_name,
-    iterate_desc,
+    display_desc, display_name, iterate_desc, iterate_name, TMFOperation
 };
+
+use tmflib::{
+    HasId,
+    HasName,
+    HasDescription,
+};
+
 use tmf_client::common::tmf_error::TMFError;
-use tmf_client::{TMFClient,Operations};
+use tmf_client::{Operations, QueryOptions, TMFClient};
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF620Modules {
@@ -37,13 +42,19 @@ pub enum TMF620Modules {
     },
 }
 
-pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules) -> Result<(),TMFError> {
+pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
     match module {
         TMF620Modules::Catalog { op } => {
             match op {
                 TMFOperation::List => {
-                    let catalogs = client.tmf620().catalog().list(None)?;
+                    let catalogs = client.tmf620().catalog().list(opts)?;
                     iterate_name(&catalogs);
+                    Ok(())
+                },
+                TMFOperation::Get { id } => {
+                    let catalog = client.tmf620().catalog().get(id)?;
+                    let the_first = catalog.first().unwrap();
+                    display_name(the_first);
                     Ok(())
                 }
                 _ => {
@@ -54,7 +65,7 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules) -> Result<
         TMF620Modules::Category { op } => {
             match op {
                 TMFOperation::List => {
-                    let categories = client.tmf620().category().list(None)?;
+                    let categories = client.tmf620().category().list(opts)?;
                     iterate_name(&categories);
                     Ok(())
                 },
@@ -66,10 +77,16 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules) -> Result<
         TMF620Modules::Offering { op } => {
             match op {
                 TMFOperation::List => {
-                    let offerings = client.tmf620().product_offering().list(None)?;
+                    let offerings = client.tmf620().product_offering().list(opts)?;
                     iterate_name(&offerings);
                     Ok(())
                 },
+                TMFOperation::Get { id } => {
+                    let offer = client.tmf620().product_offering().get(id)?;
+                    let the_first = offer.first().unwrap();
+                    display_desc(the_first);
+                    Ok(())
+                }
                 _ => {
                     Err(TMFError::from("Not implemented")) 
                 }
@@ -78,12 +95,12 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules) -> Result<
         TMF620Modules::Specification { op } => {
             match op {
                 TMFOperation::List => {
-                    let specifications = client.tmf620().product_specification().list(None)?;
+                    let specifications = client.tmf620().product_specification().list(opts)?;
                     iterate_name(&specifications);
                     Ok(())
                 },
                 _ => {
-                    Err(TMFError::from("Not implemented")) 
+                    Err(TMFError::from("Not implemented"))
                 }
 
             }
@@ -91,7 +108,7 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules) -> Result<
         TMF620Modules::Price { op } => {
             match op {
                 TMFOperation::List => {
-                    let prices = client.tmf620().product_offering_price().list(None)?;
+                    let prices = client.tmf620().product_offering_price().list(opts)?;
                     iterate_name(&prices);
                     Ok(())
                 },
