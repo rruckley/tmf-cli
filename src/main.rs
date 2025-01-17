@@ -1,18 +1,23 @@
 
 use clap::{Parser,Subcommand};
 use log::info;
-use tmf_client::{Operations, TMFClient};
+use tmf_client::TMFClient;
 use tmf_client::common::tmf_error::TMFError;
-use tmflib::{HasDescription, HasId, HasName};
+
+mod tmf;
+use tmf::tmf620::{
+    TMF620Modules,
+    handle_tmf620,
+};
 
 #[derive(Parser,Debug)]
-#[command(version, about)]
+#[command(version, about = "CLI tool for interacting with TMF APIs", author = "Ryan Ruckley")]
 struct Args {
     #[arg(long, help = "Override HOST environment variable")]
     hostname: Option<String>,
 
     #[command(subcommand)]
-    tmf : Option<TMF>,
+    tmf : TMFModules,
 
     #[clap(global = true)]
     #[arg(short = 'l')]
@@ -23,58 +28,21 @@ struct Args {
     offset: Option<u32>,
 }
 
-#[derive(Clone, Subcommand,Debug)]
-pub enum TMF {
+
+
+
+
+#[derive(Subcommand,Debug)]
+pub enum TMFModules {
     TMF620 {
-        #[command(subcommand)]
-        op: Operation
-    },
-    TMF622 {
-        #[command(subcommand)]
-        op: Operation
-    },
-    TMF629 {
-        #[command(subcommand)]
-        op : Operation
-    },
-    TMF632 {
-        #[command(subcommand)]
-        op : Operation
-    },
-    TMF633 {
-        #[command(subcommand)]
-        op : Operation
-    },
-    TMF648 {
-        #[command(subcommand)]
-        op : Operation
-    },
-    TMF674 {
-        #[command(subcommand)]
-        op : Operation
+        #[command(subcommand, help = "Product Catalog")]
+        module : TMF620Modules,
     }
 }
 
-#[derive(Clone, Subcommand,Debug)]
-pub enum Operation {
-    List,
-    Get,
-    Create,
-    Update,
-    Delete
-}
 
-fn iterate_name<T : HasId + HasName>(items : &Vec<T>) {
-    items.iter().for_each(|i| {
-        println!("Item: [{}] {} [{}]",T::get_class(),i.get_name(),i.get_id());
-    });
-}
 
-fn iterate_desc<T : HasId + HasDescription>(items : &Vec<T>) {
-    items.iter().for_each(|i| {
-        println!("Item: [{}] {} [{}]",T::get_class(),i.get_description(),i.get_id());
-    });
-}
+
 
 fn main() -> Result<(),TMFError> {
     let pkg = env!("CARGO_PKG_NAME");
@@ -95,42 +63,8 @@ fn main() -> Result<(),TMFError> {
     let mut client = TMFClient::new(host);
 
     match args.tmf {
-        Some(o) => {
-            match o {
-                TMF::TMF620 { op } => {
-                    let catalogs = client.tmf620().catalog().list(None)?;
-                    iterate_name(&catalogs);
-                },
-                TMF::TMF622 { op } => {
-                    let orders = client.tmf622().order().list(None)?;
-                    iterate_desc(&orders);
-
-                },
-                TMF::TMF629 { op } => {
-                    let customers = client.tmf629().customer().list(None)?;
-                    iterate_name(&customers);
-                },
-                TMF::TMF632 { op } => {
-                    let individuals = client.tmf632().individual().list(None)?;
-                    iterate_name(&individuals);
-                }
-                TMF::TMF633 { op } => {
-                    let candidates = client.tmf633().candidate().list(None)?;
-                    iterate_name(&candidates);
-                }
-                TMF::TMF648 { op } => {
-                    let quotes = client.tmf648().quote().list(None)?;
-                    iterate_desc(&quotes);
-                },
-                TMF::TMF674 { op } => {
-                    let sites = client.tmf674().site().list(None)?;
-                    iterate_name(&sites);
-                }
-            }
-            Ok(())
-        },
-        None => {
-            Err(TMFError::from("No option selected"))
+        TMFModules::TMF620 { module } => {
+            handle_tmf620(&mut client, module)
         }
     }
 }
