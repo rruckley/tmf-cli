@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.5.26", features = ["derive"]}
 env_logger = "0.11.6"
-log = "0.4.22"
-tmf-client = "0.1.2"
+log = "0.4.25"
+tmf-client = "0.1.3"
 # tmf-client = { git = "https://github.com/rruckley/tmf-client.git" }
 tmflib = "0.1.24"

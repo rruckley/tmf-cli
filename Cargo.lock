@@ -1020,9 +1020,9 @@ checksum = "4ee93343901ab17bd981295f2cf0026d4ad018c7c31ba84549a4ddbb47a45104"
 
 [[package]]
 name = "log"
-version = "0.4.22"
+version = "0.4.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
+checksum = "04cbf5b083de1c7e0222a7a51dbfdba1cbe1c6ab0b15e29fff3f6c077fd9cd9f"
 
 [[package]]
 name = "memchr"
@@ -1981,9 +1981,9 @@ dependencies = [
 
 [[package]]
 name = "tmf-client"
-version = "0.1.2"
+version = "0.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e76cdaed5f6456472301bc3dc032133217c022fb9f2255b20f75c53cf3ec2f61"
+checksum = "98526016cfc0f2519eaa39ea64d2a018bf39ceceb56bc734a21d1f96853dc9fb"
 dependencies = [
  "env_logger",
  "reqwest",
