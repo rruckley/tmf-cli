@@ -3,13 +3,7 @@
 use clap::Subcommand;
 
 use super::{
-    display_desc, display_name, iterate_desc, iterate_name, TMFOperation
-};
-
-use tmflib::{
-    HasId,
-    HasName,
-    HasDescription,
+    display_desc, display_name, iterate_name, TMFOperation
 };
 
 use tmf_client::common::tmf_error::TMFError;
