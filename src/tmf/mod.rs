@@ -8,6 +8,7 @@ use tmflib::{
 
 pub mod tmf620;
 pub mod tmf622;
+pub mod tmf629;
 pub mod tmf632;
 
 #[derive(Clone, Subcommand, Debug)]
