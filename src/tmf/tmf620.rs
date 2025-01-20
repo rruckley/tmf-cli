@@ -1,4 +1,4 @@
-//! Handle TMF620 operations
+//! TMF620 CLI Module
 
 use clap::Subcommand;
 

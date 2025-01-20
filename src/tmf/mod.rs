@@ -7,6 +7,7 @@ use tmflib::{
 };
 
 pub mod tmf620;
+pub mod tmf622;
 
 #[derive(Clone, Subcommand, Debug)]
 pub enum TMFOperation {
@@ -42,7 +43,7 @@ pub fn display_name<T: HasId + HasName>(item : &T) {
     
 }
 
-pub fn display_desc<T : HasId + HasName + HasDescription>(item : &T) {
-    display_name(item);
+pub fn display_desc<T : HasId + HasDescription>(item : &T) {
+    display_id(item);
     println!("Desc:\t{}",item.get_description());
 }
