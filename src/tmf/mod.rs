@@ -8,6 +8,7 @@ use tmflib::{
 
 pub mod tmf620;
 pub mod tmf622;
+pub mod tmf632;
 
 #[derive(Clone, Subcommand, Debug)]
 pub enum TMFOperation {
@@ -46,4 +47,11 @@ pub fn display_name<T: HasId + HasName>(item : &T) {
 pub fn display_desc<T : HasId + HasDescription>(item : &T) {
     display_id(item);
     println!("Desc:\t{}",item.get_description());
+}
+
+pub fn display_opt(label : &str, field : &Option<String>) {
+    match field {
+        Some(v) => println!("{}:\t{}",label,v),
+        None => println!("{}:\tNot Set",label),
+    }
 }
