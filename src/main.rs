@@ -17,6 +17,10 @@ use tmf::tmf632::{
     TMF632Modules,
     handle_tmf632,
 };
+use tmf::tmf629::{
+    TMF629Modules,
+    handle_tmf629,
+};
 
 #[derive(Parser,Debug)]
 #[command(version, about = "CLI tool for interacting with TMF APIs", author = "Ryan Ruckley")]
@@ -50,8 +54,12 @@ pub enum TMFModules {
         #[command(subcommand, help = "Product Order")]
         module : TMF622Modules,
     },
+    TMF629 {
+        #[command(subcommand, help = "Customer")]
+        module : TMF629Modules,
+    },
     TMF632 {
-        #[command(subcommand, help = "Party Management")]
+        #[command(subcommand, help = "Party")]
         module : TMF632Modules,
     }
 }
@@ -92,6 +100,9 @@ fn main() -> Result<(),TMFError> {
         },
         TMFModules::TMF622 { module } => {
             handle_tmf622(&mut client, module, Some(opts))
+        },
+        TMFModules::TMF629 { module } => {
+            handle_tmf629(&mut client, module, Some(opts))
         },
         TMFModules::TMF632 { module } => {
             handle_tmf632(&mut client, module, Some(opts))
