@@ -3,7 +3,10 @@
 use clap::Subcommand;
 
 use super::{
-    display_name, iterate_name, TMFOperation
+    display_name,
+    display_opt,
+    iterate_name,
+    TMFOperation
 };
 
 use tmf_client::common::tmf_error::TMFError;
@@ -30,6 +33,7 @@ pub fn handle_tmf629(client : &mut TMFClient, module : TMF629Modules, opts : Opt
                     let customer = client.tmf629().customer().get(id)?;
                     let the_first = customer.first().unwrap();
                     display_name(the_first);
+                    display_opt("Status",&the_first.status);
                     Ok(())
                 }
                 _ => {
