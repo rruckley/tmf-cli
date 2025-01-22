@@ -2,6 +2,8 @@
 
 use clap::Subcommand;
 
+use crate::Output;
+
 use super::{
     display_name, display_opt, iterate_name, TMFOperation
 };
@@ -21,13 +23,13 @@ pub enum TMF632Modules {
     },
 }
 
-pub fn handle_tmf632(client : &mut TMFClient, module : TMF632Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf632(client : &mut TMFClient, module : TMF632Modules, opts : Option<QueryOptions>,output : Output) -> Result<(),TMFError> {
     match module {
         TMF632Modules::Individual { op } => {
             match op {
                 TMFOperation::List => {
                     let individuals = client.tmf632().individual().list(opts)?;
-                    iterate_name(&individuals);
+                    iterate_name(&individuals,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
@@ -51,7 +53,7 @@ pub fn handle_tmf632(client : &mut TMFClient, module : TMF632Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let organization = client.tmf632().organization().list(opts)?;
-                    iterate_name(&organization);
+                    iterate_name(&organization,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {

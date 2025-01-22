@@ -5,6 +5,9 @@ use tmflib::{
     HasName,
     HasDescription,
 };
+use serde::Serialize;
+
+use crate::Output;
 
 pub mod tmf620;
 pub mod tmf622;
@@ -25,10 +28,18 @@ pub enum TMFOperation {
     Delete
 }
 
-pub fn iterate_name<T : HasId + HasName>(items : &Vec<T>) {
-    items.iter().for_each(|i| {
-        println!("Item: [{}] {} [{}]",T::get_class(),i.get_name(),i.get_id());
-    });
+pub fn iterate_name<T : HasId + HasName + Serialize>(items : &Vec<T>,output : Output) {
+    match output {
+        Output::Text => {
+            items.iter().for_each(|i| {
+                println!("Item: [{}] {} [{}]",T::get_class(),i.get_name(),i.get_id());
+            });
+        },
+        Output::Json => {
+            display_json(items);
+        }
+    }
+
 }
 
 pub fn iterate_desc<T : HasId + HasDescription>(items : &Vec<T>) {
@@ -42,10 +53,9 @@ pub fn display_id<T: HasId>(item : &T) {
     println!("Href:\t{}",item.get_href());    
 }
 
-pub fn display_name<T: HasId + HasName>(item : &T) {
+pub fn display_name<T: HasId + HasName + Serialize>(item : &T) {
     display_id(item);
     println!("Name:\t{}",item.get_name());
-    
 }
 
 pub fn display_desc<T : HasId + HasDescription>(item : &T) {
@@ -58,4 +68,9 @@ pub fn display_opt(label : &str, field : &Option<String>) {
         Some(v) => println!("{}:\t{}",label,v),
         None => println!("{}:\tNot Set",label),
     }
+}
+
+pub fn display_json<T : Serialize>(item : T) {
+    let json = serde_json::to_string(&item).expect("Could not create JSON");
+    println!("{}",json);
 }

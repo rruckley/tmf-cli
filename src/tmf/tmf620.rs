@@ -2,8 +2,14 @@
 
 use clap::Subcommand;
 
+use crate::Output;
+
 use super::{
-    display_desc, display_name, iterate_name, TMFOperation
+    display_desc,
+    display_name,
+    display_json,
+    iterate_name,
+    TMFOperation
 };
 
 use tmf_client::common::tmf_error::TMFError;
@@ -36,19 +42,22 @@ pub enum TMF620Modules {
     },
 }
 
-pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Option<QueryOptions>, output : Output) -> Result<(),TMFError> {
     match module {
         TMF620Modules::Catalog { op } => {
             match op {
                 TMFOperation::List => {
                     let catalogs = client.tmf620().catalog().list(opts)?;
-                    iterate_name(&catalogs);
+                    iterate_name(&catalogs,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
                     let catalog = client.tmf620().catalog().get(id)?;
                     let the_first = catalog.first().unwrap();
-                    display_name(the_first);
+                    match output {
+                        Output::Json => display_json(the_first),
+                        Output::Text => display_name(the_first),
+                    }
                     Ok(())
                 }
                 _ => {
@@ -60,7 +69,7 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let categories = client.tmf620().category().list(opts)?;
-                    iterate_name(&categories);
+                    iterate_name(&categories,output);
                     Ok(())
                 },
                 _ => {
@@ -72,7 +81,7 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let offerings = client.tmf620().product_offering().list(opts)?;
-                    iterate_name(&offerings);
+                    iterate_name(&offerings,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
@@ -90,7 +99,7 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let specifications = client.tmf620().product_specification().list(opts)?;
-                    iterate_name(&specifications);
+                    iterate_name(&specifications,output);
                     Ok(())
                 },
                 _ => {
@@ -103,7 +112,7 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let prices = client.tmf620().product_offering_price().list(opts)?;
-                    iterate_name(&prices);
+                    iterate_name(&prices,output);
                     Ok(())
                 },
                 _ => {
