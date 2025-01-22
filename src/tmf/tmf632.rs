@@ -2,6 +2,7 @@
 
 use clap::Subcommand;
 use tmflib::tmf632::individual_v4::Individual;
+use tmflib::tmf632::organization_v4::Organization;
 
 use crate::Output;
 
@@ -59,6 +60,12 @@ pub fn handle_tmf632(client : &mut TMFClient, module : TMF632Modules, opts : Opt
         },
         TMF632Modules::Organization { op } => {
             match op {
+                TMFOperation::Create { name, desc } => {
+                    let organization = Organization::new(name);
+                    let new_org = client.tmf632().organization().create(organization)?;
+                    display_name(&new_org);
+                    Ok(())
+                }
                 TMFOperation::List => {
                     let organization = client.tmf632().organization().list(opts)?;
                     iterate_name(&organization,output);

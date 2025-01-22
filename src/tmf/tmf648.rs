@@ -39,7 +39,9 @@ pub fn handle_tmf648(client : &mut TMFClient, module : TMF648Modules, opts : Opt
                     let mut quote  = Quote::new();
                     quote.set_name(name);
                     if let Some(n) = desc {
-                        quote.add_note(Note::new(n));
+                        // BUG: HasNote macro does not properly create the Vec<Note>
+                        quote.note = Some(vec![Note::new(n)]);
+                        // quote.add_note(Note::new(n));
                     };
                     // quote.description = desc.clone();
                     let new_quote = client.tmf648().quote().create(quote)?;
