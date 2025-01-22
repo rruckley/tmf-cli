@@ -1,6 +1,8 @@
 //! TMF632 CLI Module
 
 use clap::Subcommand;
+use tmflib::tmf632::individual_v4::Individual;
+use tmflib::tmf632::organization_v4::Organization;
 
 use crate::Output;
 
@@ -27,6 +29,13 @@ pub fn handle_tmf632(client : &mut TMFClient, module : TMF632Modules, opts : Opt
     match module {
         TMF632Modules::Individual { op } => {
             match op {
+                TMFOperation::Create { name, desc } => {
+                    let individual = Individual::new(name)
+                        .title(desc.unwrap_or_default());
+                    let new_ind = client.tmf632().individual().create(individual)?;
+                    display_name(&new_ind);
+                    Ok(())
+                }
                 TMFOperation::List => {
                     let individuals = client.tmf632().individual().list(opts)?;
                     iterate_name(&individuals,output);
@@ -51,6 +60,12 @@ pub fn handle_tmf632(client : &mut TMFClient, module : TMF632Modules, opts : Opt
         },
         TMF632Modules::Organization { op } => {
             match op {
+                TMFOperation::Create { name, desc } => {
+                    let organization = Organization::new(name);
+                    let new_org = client.tmf632().organization().create(organization)?;
+                    display_name(&new_org);
+                    Ok(())
+                }
                 TMFOperation::List => {
                     let organization = client.tmf632().organization().list(opts)?;
                     iterate_name(&organization,output);

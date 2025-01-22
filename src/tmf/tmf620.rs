@@ -1,15 +1,14 @@
 //! TMF620 CLI Module
 
 use clap::Subcommand;
+use tmflib::tmf620::catalog::Catalog;
+use tmflib::tmf620::category::Category;
+
 
 use crate::Output;
 
 use super::{
-    display_desc,
-    display_name,
-    display_json,
-    iterate_name,
-    TMFOperation
+    display_desc, display_json, display_name, display_opt, iterate_name, TMFOperation
 };
 
 use tmf_client::common::tmf_error::TMFError;
@@ -46,6 +45,14 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Opt
     match module {
         TMF620Modules::Catalog { op } => {
             match op {
+                TMFOperation::Create { name, desc  } => {
+                    // Create a new object
+                    let catalog = Catalog::new(name);
+                    // .description(desc.unwrap_or_default());
+                    let _new_catalog = client.tmf620().catalog().create(catalog)?;
+                    // TODO: display_name(&new_catalog);
+                    Ok(())
+                },
                 TMFOperation::List => {
                     let catalogs = client.tmf620().catalog().list(opts)?;
                     iterate_name(&catalogs,output);
@@ -67,11 +74,26 @@ pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Opt
         },
         TMF620Modules::Category { op } => {
             match op {
+                TMFOperation::Create { name, desc } => {
+                    let category = Category::new(name)
+                        .description(desc.unwrap_or_default());
+                    let new_cat = client.tmf620().category().create(category)?;
+                    display_name(&new_cat);
+                    display_opt("Desc", &new_cat.description);
+                    Ok(())
+                }
                 TMFOperation::List => {
                     let categories = client.tmf620().category().list(opts)?;
                     iterate_name(&categories,output);
                     Ok(())
                 },
+                TMFOperation::Get { id } => {
+                    let category = client.tmf620().category().get(id)?;
+                    let the_first = category.first().unwrap();
+                    display_name(the_first);
+                    display_opt("Desc", &the_first.description);
+                    Ok(())
+                }
                 _ => {
                     Err(TMFError::from("Not implemented")) 
                 }

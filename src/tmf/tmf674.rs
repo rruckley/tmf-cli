@@ -1,6 +1,8 @@
 //! TMF674 CLI Module
 
 use clap::Subcommand;
+use tmflib::tmf674::geographic_site_v4::GeographicSite;
+use tmflib::HasDescription;
 
 use crate::Output;
 
@@ -26,6 +28,15 @@ pub fn handle_tmf674(client : &mut TMFClient, module : TMF674Modules, opts : Opt
     match module {
         TMF674Modules::Site { op } => {
             match op {
+                TMFOperation::Create { name, desc } => {
+                    let site = GeographicSite::new(name)
+                        .description(desc.unwrap_or_default());
+                    let new_site = client.tmf674().site().create(site)?;
+                    display_name(&new_site);
+                    display_opt("Desc", &new_site.description);
+                    display_opt("Code", &new_site.code);
+                    Ok(())
+                }
                 TMFOperation::List => {
                     let sites = client.tmf674().site().list(opts)?;
                     iterate_name(&sites,output);

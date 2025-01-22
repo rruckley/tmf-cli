@@ -23,7 +23,10 @@ pub enum TMFOperation {
     Get {
         id : String,
     },
-    Create,
+    Create {
+        name : String,
+        desc : Option<String>,
+    },
     Update,
     Delete
 }
@@ -71,6 +74,6 @@ pub fn display_opt(label : &str, field : &Option<String>) {
 }
 
 pub fn display_json<T : Serialize>(item : T) {
-    let json = serde_json::to_string(&item).expect("Could not create JSON");
+    let json = serde_json::to_string_pretty(&item).expect("Could not create JSON");
     println!("{}",json);
 }

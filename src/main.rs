@@ -1,6 +1,6 @@
 
 use clap::{Parser,Subcommand};
-use log::info;
+use log::{info,error};
 use tmf_client::TMFClient;
 use tmf_client::common::tmf_error::TMFError;
 
@@ -132,7 +132,7 @@ fn main() -> Result<(),TMFError> {
 
     let mut client = TMFClient::new(host);
 
-    match args.tmf {
+    let result = match args.tmf {
         TMFModules::TMF620 { module } => {
             handle_tmf620(&mut client, module, Some(opts),output)
         },
@@ -154,5 +154,15 @@ fn main() -> Result<(),TMFError> {
         TMFModules::TMF674 { module } => {
             handle_tmf674(&mut client, module, Some(opts),output)
         }
+    };
+    match result {
+        Ok(r) => {
+            info!("Successful operation");
+            Ok(r)
+        },
+        Err(e) => {
+            error!("Operation failed: {}",e.message);
+            Err(e)
+        },
     }
 }
