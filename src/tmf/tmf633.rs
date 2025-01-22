@@ -47,7 +47,7 @@ pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Opt
                     let the_first = catalog.first().unwrap();
                     display_name(the_first);
                     Ok(())
-                }
+                },
                 _ => {
                     Err(TMFError::from("Not implemented"))
                 }
@@ -58,6 +58,12 @@ pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Opt
                 TMFOperation::List => {
                     let categories = client.tmf633().category().list(opts)?;
                     iterate_name(&categories);
+                    Ok(())
+                },
+                TMFOperation::Get { id } => {
+                    let category = client.tmf633().category().get(id)?;
+                    let the_first = category.first().unwrap();
+                    display_name(the_first);
                     Ok(())
                 },
                 _ => {
