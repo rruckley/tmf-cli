@@ -34,6 +34,11 @@ use tmf::tmf674::{
     handle_tmf674,
 };
 
+pub enum Output {
+    Text,
+    Json,
+}
+
 #[derive(Parser,Debug)]
 #[command(version, about = "CLI tool for interacting with TMF APIs", author = "Ryan Ruckley")]
 struct Args {
@@ -54,6 +59,10 @@ struct Args {
     #[clap(global = true)]
     #[arg(short = 'n', long)]
     name: Option<String>,
+
+    #[clap(global = true)]
+    #[arg(short = 'j', long)]
+    json: Option<bool>,
 }
 
 #[derive(Subcommand,Debug)]
@@ -108,6 +117,16 @@ fn main() -> Result<(),TMFError> {
         opts = opts.name(n);
     }
 
+    let output = match args.json {
+        Some(j) => {
+            match j {
+                true => Output::Json,
+                false => Output::Text,
+            }
+        },
+        None => Output::Text,
+    };
+
     // Find a host
     let host = match args.hostname {
         Some(h) => h,
@@ -120,25 +139,25 @@ fn main() -> Result<(),TMFError> {
 
     match args.tmf {
         TMFModules::TMF620 { module } => {
-            handle_tmf620(&mut client, module, Some(opts))
+            handle_tmf620(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF622 { module } => {
             handle_tmf622(&mut client, module, Some(opts))
         },
         TMFModules::TMF629 { module } => {
-            handle_tmf629(&mut client, module, Some(opts))
+            handle_tmf629(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF632 { module } => {
-            handle_tmf632(&mut client, module, Some(opts))
+            handle_tmf632(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF633 { module } => {
-            handle_tmf633(&mut client, module, Some(opts))
+            handle_tmf633(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF648 { module } => {
-            handle_tmf648(&mut client, module, Some(opts))
+            handle_tmf648(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF674 { module } => {
-            handle_tmf674(&mut client, module, Some(opts))
+            handle_tmf674(&mut client, module, Some(opts),output)
         }
     }
 }

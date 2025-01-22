@@ -4,6 +4,8 @@
 
 use clap::Subcommand;
 
+use crate::Output;
+
 use super::{
     display_desc, display_name, iterate_name, TMFOperation
 };
@@ -33,13 +35,13 @@ pub enum TMF633Modules {
     },
 }
 
-pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Option<QueryOptions>, output : Output) -> Result<(),TMFError> {
     match module {
         TMF633Modules::Catalog { op } => {
             match op {
                 TMFOperation::List => {
                     let catalogs = client.tmf633().catalog().list(opts)?;
-                    iterate_name(&catalogs);
+                    iterate_name(&catalogs,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
@@ -57,7 +59,7 @@ pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let categories = client.tmf633().category().list(opts)?;
-                    iterate_name(&categories);
+                    iterate_name(&categories,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
@@ -75,7 +77,7 @@ pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let candidates = client.tmf633().candidate().list(opts)?;
-                    iterate_name(&candidates);
+                    iterate_name(&candidates,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
@@ -93,7 +95,7 @@ pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Opt
             match op {
                 TMFOperation::List => {
                     let specifications = client.tmf633().specification().list(opts)?;
-                    iterate_name(&specifications);
+                    iterate_name(&specifications,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {

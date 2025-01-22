@@ -2,6 +2,8 @@
 
 use clap::Subcommand;
 
+use crate::Output;
+
 use super::{
     display_name,
     display_opt,
@@ -20,13 +22,13 @@ pub enum TMF674Modules {
     },
 }
 
-pub fn handle_tmf674(client : &mut TMFClient, module : TMF674Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf674(client : &mut TMFClient, module : TMF674Modules, opts : Option<QueryOptions>,output : Output) -> Result<(),TMFError> {
     match module {
         TMF674Modules::Site { op } => {
             match op {
                 TMFOperation::List => {
                     let sites = client.tmf674().site().list(opts)?;
-                    iterate_name(&sites);
+                    iterate_name(&sites,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {

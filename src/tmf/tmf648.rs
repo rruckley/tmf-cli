@@ -4,6 +4,8 @@
 
 use clap::Subcommand;
 
+use crate::Output;
+
 use super::{
     display_desc,
     display_opt,
@@ -22,13 +24,13 @@ pub enum TMF648Modules {
     },
 }
 
-pub fn handle_tmf648(client : &mut TMFClient, module : TMF648Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf648(client : &mut TMFClient, module : TMF648Modules, opts : Option<QueryOptions>,output : Output) -> Result<(),TMFError> {
     match module {
         TMF648Modules::Quote { op } => {
             match op {
                 TMFOperation::List => {
                     let quotes = client.tmf648().quote().list(opts)?;
-                    iterate_name(&quotes);
+                    iterate_name(&quotes,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {

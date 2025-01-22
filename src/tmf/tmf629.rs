@@ -2,6 +2,8 @@
 
 use clap::Subcommand;
 
+use crate::Output;
+
 use super::{
     display_name,
     display_opt,
@@ -20,13 +22,13 @@ pub enum TMF629Modules {
     },
 }
 
-pub fn handle_tmf629(client : &mut TMFClient, module : TMF629Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf629(client : &mut TMFClient, module : TMF629Modules, opts : Option<QueryOptions>,output : Output) -> Result<(),TMFError> {
     match module {
         TMF629Modules::Customer { op } => {
             match op {
                 TMFOperation::List => {
                     let customers = client.tmf629().customer().list(opts)?;
-                    iterate_name(&customers);
+                    iterate_name(&customers,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {
