@@ -61,8 +61,8 @@ struct Args {
     name: Option<String>,
 
     #[clap(global = true)]
-    #[arg(short = 'j', long)]
-    json: Option<bool>,
+    #[arg(short = 'j', long, action)]
+    json: bool,
 }
 
 #[derive(Subcommand,Debug)]
@@ -118,13 +118,8 @@ fn main() -> Result<(),TMFError> {
     }
 
     let output = match args.json {
-        Some(j) => {
-            match j {
-                true => Output::Json,
-                false => Output::Text,
-            }
-        },
-        None => Output::Text,
+            true => Output::Json,
+            false => Output::Text,
     };
 
     // Find a host
