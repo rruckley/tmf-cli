@@ -3,10 +3,17 @@
 //! TMF629 CLI Module
 
 use clap::Subcommand;
+use tmflib::tmf648::quote::Quote;
+use tmflib::common::note::Note;
+use tmflib::{
+    HasName,
+    HasNote
+};
 
 use crate::Output;
 
 use super::{
+    display_id,
     display_desc,
     display_opt,
     iterate_name,
@@ -28,6 +35,18 @@ pub fn handle_tmf648(client : &mut TMFClient, module : TMF648Modules, opts : Opt
     match module {
         TMF648Modules::Quote { op } => {
             match op {
+                TMFOperation::Create { name, desc } => {
+                    let mut quote  = Quote::new();
+                    quote.set_name(name);
+                    if let Some(n) = desc {
+                        quote.add_note(Note::new(n));
+                    };
+                    // quote.description = desc.clone();
+                    let new_quote = client.tmf648().quote().create(quote)?;
+                    display_id(&new_quote);
+                    display_opt("Desc", &new_quote.description);
+                    Ok(())
+                }
                 TMFOperation::List => {
                     let quotes = client.tmf648().quote().list(opts)?;
                     iterate_name(&quotes,output);

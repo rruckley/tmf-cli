@@ -23,7 +23,10 @@ pub enum TMFOperation {
     Get {
         id : String,
     },
-    Create,
+    Create {
+        name : String,
+        desc : Option<String>,
+    },
     Update,
     Delete
 }
