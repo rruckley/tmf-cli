@@ -25,6 +25,10 @@ use tmf::tmf633::{
     TMF633Modules,
     handle_tmf633,
 };
+use tmf::tmf645::{
+    TMF645Modules,
+    handle_tmf645,
+};
 use tmf::tmf648::{
     TMF648Modules,
     handle_tmf648,
@@ -87,6 +91,10 @@ pub enum TMFModules {
         #[command(subcommand, help = "Service Catalog")]
         module : TMF633Modules,
     },
+    TMF645 {
+        #[command(subcommand, help = "Service Qualification")]
+        module : TMF645Modules,
+    },
     TMF648 {
         #[command(subcommand, help = "Product Quote")]
         module : TMF648Modules,
@@ -137,7 +145,7 @@ fn main() -> Result<(),TMFError> {
             handle_tmf620(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF622 { module } => {
-            handle_tmf622(&mut client, module, Some(opts))
+            handle_tmf622(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF629 { module } => {
             handle_tmf629(&mut client, module, Some(opts),output)
@@ -147,6 +155,9 @@ fn main() -> Result<(),TMFError> {
         },
         TMFModules::TMF633 { module } => {
             handle_tmf633(&mut client, module, Some(opts),output)
+        },
+        TMFModules::TMF645 { module } => {
+            handle_tmf645(&mut client, module, Some(opts),output)
         },
         TMFModules::TMF648 { module } => {
             handle_tmf648(&mut client, module, Some(opts),output)

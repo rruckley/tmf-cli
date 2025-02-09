@@ -3,7 +3,7 @@
 //! TMF620 CLI Module
 
 use clap::Subcommand;
-use tmflib::tmf633::service_candidate::ServiceCandidate;
+// use tmflib::tmf633::service_candidate::ServiceCandidate;
 use tmflib::tmf633::service_catalog::ServiceCatalog;
 use tmflib::tmf633::service_category::ServiceCategory;
 use tmflib::tmf633::service_specification::ServiceSpecification;
@@ -96,8 +96,9 @@ pub fn handle_tmf633(client : &mut TMFClient, module : TMF633Modules, opts : Opt
             match op {
                 TMFOperation::Create { name, desc } => {
                     // Need to use the desc field as the id of a specificaton to link to this candidate
-                    // let candidate = ServiceCandidate::new(name, specification_ref)
-                    Err(TMFError::from("Not implemented"))
+                    // let candidate = ServiceCandidate::new(name, specification_ref);
+                    // Err(TMFError::from(format!("Operaion Create Not implemented: {} {}",name,desc.unwrap_or_default())))
+                    Err(TMFError::from("Operation Create Not implemented"))
                 }
                 TMFOperation::List => {
                     let candidates = client.tmf633().candidate().list(opts)?;

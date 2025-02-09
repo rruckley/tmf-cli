@@ -14,6 +14,7 @@ pub mod tmf622;
 pub mod tmf629;
 pub mod tmf632;
 pub mod tmf633;
+pub mod tmf645;
 pub mod tmf648;
 pub mod tmf674;
 
@@ -45,10 +46,17 @@ pub fn iterate_name<T : HasId + HasName + Serialize>(items : &Vec<T>,output : Ou
 
 }
 
-pub fn iterate_desc<T : HasId + HasDescription>(items : &Vec<T>) {
-    items.iter().for_each(|i| {
-        println!("Item: [{}] {} [{}]",T::get_class(),i.get_description(),i.get_id());
-    });
+pub fn iterate_desc<T : HasId + HasDescription + Serialize>(items : &Vec<T>,output : Output) {
+    match output {
+        Output::Text => {
+            items.iter().for_each(|i| {
+                println!("Item: [{}] {} [{}]",T::get_class(),i.get_description(),i.get_id());
+            });
+        },
+        Output::Json => {
+            display_json(items);
+        }
+    }
 }
 
 pub fn display_id<T: HasId>(item : &T) {
