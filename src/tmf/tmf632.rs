@@ -6,6 +6,8 @@ use tmflib::tmf632::organization_v4::Organization;
 
 use crate::Output;
 
+#[warn(unused_variables)]
+
 use super::{
     display_name, display_opt, iterate_name, TMFOperation
 };

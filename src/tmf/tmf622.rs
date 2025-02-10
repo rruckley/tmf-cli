@@ -9,6 +9,7 @@ use super::{
 
 use tmf_client::common::tmf_error::TMFError;
 use tmf_client::{Operations, QueryOptions, TMFClient};
+use crate::Output;
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF622Modules {
@@ -18,13 +19,13 @@ pub enum TMF622Modules {
     },
 }
 
-pub fn handle_tmf622(client : &mut TMFClient, module : TMF622Modules, opts : Option<QueryOptions>) -> Result<(),TMFError> {
+pub fn handle_tmf622(client : &mut TMFClient, module : TMF622Modules, opts : Option<QueryOptions>,output : Output) -> Result<(),TMFError> {
     match module {
         TMF622Modules::Order { op } => {
             match op {
                 TMFOperation::List => {
                     let orders = client.tmf622().order().list(opts)?;
-                    iterate_desc(&orders);
+                    iterate_desc(&orders,output);
                     Ok(())
                 },
                 TMFOperation::Get { id } => {

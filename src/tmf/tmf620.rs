@@ -5,6 +5,7 @@ use tmflib::tmf620::catalog::Catalog;
 use tmflib::tmf620::category::Category;
 
 
+
 use crate::Output;
 
 use super::{
@@ -40,6 +41,7 @@ pub enum TMF620Modules {
 
     },
 }
+
 
 pub fn handle_tmf620(client : &mut TMFClient, module : TMF620Modules, opts : Option<QueryOptions>, output : Output) -> Result<(),TMFError> {
     match module {

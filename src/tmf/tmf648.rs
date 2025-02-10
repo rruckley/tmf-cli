@@ -1,13 +1,11 @@
 //! TMF648 CLI Module
 
-//! TMF629 CLI Module
-
 use clap::Subcommand;
 use tmflib::tmf648::quote::Quote;
 use tmflib::common::note::Note;
 use tmflib::{
     HasName,
-    HasNote
+    // HasNote
 };
 
 use crate::Output;
