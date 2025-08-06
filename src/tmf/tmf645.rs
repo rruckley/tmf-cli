@@ -3,19 +3,12 @@
 use clap::Subcommand;
 use tmflib::tmf645::check_service_qualification::CheckServiceQualification;
 use tmflib::{
-    HasDescription
-    // HasNote
+    HasDescription, // HasNote
 };
 
 use crate::Output;
 
-use super::{
-    display_id,
-    display_desc,
-    display_opt,
-    iterate_desc,
-    TMFOperation
-};
+use super::{display_desc, display_id, display_opt, iterate_desc, TMFOperation};
 
 use tmf_client::common::tmf_error::TMFError;
 use tmf_client::{Operations, QueryOptions, TMFClient};
@@ -24,17 +17,21 @@ use tmf_client::{Operations, QueryOptions, TMFClient};
 pub enum TMF645Modules {
     Qualification {
         #[command(subcommand, help = "Check Service Qualification")]
-        op : TMFOperation
+        op: TMFOperation,
     },
 }
 
-
-pub fn handle_tmf645(client : &mut TMFClient, module : TMF645Modules, opts : Option<QueryOptions>,output : Output) -> Result<(),TMFError> {
+pub fn handle_tmf645(
+    client: &mut TMFClient,
+    module: TMF645Modules,
+    opts: Option<QueryOptions>,
+    output: Output,
+) -> Result<(), TMFError> {
     match module {
         TMF645Modules::Qualification { op } => {
             match op {
                 TMFOperation::Create { name, desc } => {
-                    let qualification  = CheckServiceQualification::new(name);
+                    let qualification = CheckServiceQualification::new(name);
                     // qualification.set_name(name);
                     // if let Some(n) = desc {
                     //     // BUG: HasNote macro does not properly create the Vec<Note>
@@ -49,22 +46,20 @@ pub fn handle_tmf645(client : &mut TMFClient, module : TMF645Modules, opts : Opt
                 }
                 TMFOperation::List => {
                     let qualifications = client.tmf645().check_qualifcation().list(opts)?;
-                    iterate_desc(&qualifications,output);
+                    iterate_desc(&qualifications, output);
                     Ok(())
-                },
+                }
                 TMFOperation::Get { id } => {
                     let quote = client.tmf648().quote().get(id)?;
                     let the_first = quote.first().unwrap();
                     display_desc(the_first);
-                    display_opt("Category",&the_first.category);
-                    display_opt("Version",&the_first.version);
+                    display_opt("Category", &the_first.category);
+                    display_opt("Version", &the_first.version);
                     // display_opt("External Id",&the_f)
                     Ok(())
                 }
-                _ => {
-                    Err(TMFError::from("Not implemented"))
-                }
+                _ => Err(TMFError::from("Not implemented")),
             }
-        },
+        }
     }
 }

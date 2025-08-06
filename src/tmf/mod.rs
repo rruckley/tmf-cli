@@ -1,11 +1,6 @@
-
 use clap::Subcommand;
-use tmflib::{
-    HasId,
-    HasName,
-    HasDescription,
-};
 use serde::Serialize;
+use tmflib::{HasDescription, HasId, HasName};
 
 use crate::Output;
 
@@ -21,67 +16,71 @@ pub mod tmf674;
 #[derive(Clone, Subcommand, Debug)]
 pub enum TMFOperation {
     List,
-    Get {
-        id : String,
-    },
-    Create {
-        name : String,
-        desc : Option<String>,
-    },
+    Get { id: String },
+    Create { name: String, desc: Option<String> },
     Update,
-    Delete
+    Delete,
 }
 
-pub fn iterate_name<T : HasId + HasName + Serialize>(items : &Vec<T>,output : Output) {
+pub fn iterate_name<T: HasId + HasName + Serialize>(items: &Vec<T>, output: Output) {
     match output {
         Output::Text => {
             items.iter().for_each(|i| {
-                println!("Item: [{}] {} [{}]",T::get_class(),i.get_name(),i.get_id());
+                println!(
+                    "Item: [{}] {} [{}]",
+                    T::get_class(),
+                    i.get_name(),
+                    i.get_id()
+                );
             });
-        },
-        Output::Json => {
-            display_json(items);
         }
-    }
-
-}
-
-pub fn iterate_desc<T : HasId + HasDescription + Serialize>(items : &Vec<T>,output : Output) {
-    match output {
-        Output::Text => {
-            items.iter().for_each(|i| {
-                println!("Item: [{}] {} [{}]",T::get_class(),i.get_description(),i.get_id());
-            });
-        },
         Output::Json => {
             display_json(items);
         }
     }
 }
 
-pub fn display_id<T: HasId>(item : &T) {
-    println!("Id:\t{}",item.get_id());
-    println!("Href:\t{}",item.get_href());    
+pub fn iterate_desc<T: HasId + HasDescription + Serialize>(items: &Vec<T>, output: Output) {
+    match output {
+        Output::Text => {
+            items.iter().for_each(|i| {
+                println!(
+                    "Item: [{}] {} [{}]",
+                    T::get_class(),
+                    i.get_description(),
+                    i.get_id()
+                );
+            });
+        }
+        Output::Json => {
+            display_json(items);
+        }
+    }
 }
 
-pub fn display_name<T: HasId + HasName + Serialize>(item : &T) {
+pub fn display_id<T: HasId>(item: &T) {
+    println!("Id:\t{}", item.get_id());
+    println!("Href:\t{}", item.get_href());
+}
+
+pub fn display_name<T: HasId + HasName + Serialize>(item: &T) {
     display_id(item);
-    println!("Name:\t{}",item.get_name());
+    println!("Name:\t{}", item.get_name());
 }
 
-pub fn display_desc<T : HasId + HasDescription>(item : &T) {
+pub fn display_desc<T: HasId + HasDescription>(item: &T) {
     display_id(item);
-    println!("Desc:\t{}",item.get_description());
+    println!("Desc:\t{}", item.get_description());
 }
 
-pub fn display_opt(label : &str, field : &Option<String>) {
+pub fn display_opt(label: &str, field: &Option<String>) {
     match field {
-        Some(v) => println!("{}:\t{}",label,v),
-        None => println!("{}:\tNot Set",label),
+        Some(v) => println!("{}:\t{}", label, v),
+        None => println!("{}:\tNot Set", label),
     }
 }
 
-pub fn display_json<T : Serialize>(item : T) {
+pub fn display_json<T: Serialize>(item: T) {
     let json = serde_json::to_string_pretty(&item).expect("Could not create JSON");
-    println!("{}",json);
+    println!("{}", json);
 }
