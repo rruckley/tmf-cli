@@ -172,7 +172,7 @@ fn main() -> Result<(),TMFError> {
             Ok(r)
         },
         Err(e) => {
-            error!("Operation failed: {}",e.message);
+            error!("Operation failed: {}",e);
             Err(e)
         },
     }
