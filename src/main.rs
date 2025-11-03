@@ -18,6 +18,8 @@ pub enum Output {
     Json,
 }
 
+const HOSTNAME : &str = "https://localhost:8001";
+
 #[derive(Parser, Debug)]
 #[command(
     version,
@@ -111,7 +113,7 @@ fn main() -> Result<(), TMFError> {
     // Find a host
     let host = match args.hostname {
         Some(h) => h,
-        None => String::from("http://localhost:8001"),
+        None => String::from(HOSTNAME),
     };
 
     info!("Host\t: {}", &host);
