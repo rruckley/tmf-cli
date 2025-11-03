@@ -6,11 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-clap = { version = "4.5.42", features = ["derive"]}
+clap = { version = "4.5.51", features = ["derive"]}
 env_logger = "0.11.6"
-log = "0.4.27"
+log = "0.4.28"
 serde = "1.0.217"
-serde_json = "1.0.138"
+serde_json = "1.0.145"
 tmf-client = "0.1.9"
 # tmf-client = { git = "https://github.com/rruckley/tmf-client.git" }
-tmflib = "0.1.32"
+tmflib = "0.1.34"
