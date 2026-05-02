@@ -133,7 +133,7 @@ fn main() -> Result<(), TMFError> {
 
     info!("Host\t: {}", &host);
 
-    let mut client = TMFClient::new(host);
+    let mut client = TMFClient::new(host,None);
 
     let result = match args.tmf {
         TMFModules::TMF620 { module } => handle_tmf620(&mut client, module, Some(opts), output),
