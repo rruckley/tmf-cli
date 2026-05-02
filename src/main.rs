@@ -9,6 +9,9 @@ use tmf::tmf622::{handle_tmf622, TMF622Modules};
 use tmf::tmf629::{handle_tmf629, TMF629Modules};
 use tmf::tmf632::{handle_tmf632, TMF632Modules};
 use tmf::tmf633::{handle_tmf633, TMF633Modules};
+use tmf::tmf637::{handle_tmf637, TMF637Modules};
+use tmf::tmf638::{handle_tmf638, TMF638Modules};
+use tmf::tmf639::{handle_tmf639, TMF639Modules};
 use tmf::tmf645::{handle_tmf645, TMF645Modules};
 use tmf::tmf648::{handle_tmf648, TMF648Modules};
 use tmf::tmf674::{handle_tmf674, TMF674Modules};
@@ -72,6 +75,18 @@ pub enum TMFModules {
         #[command(subcommand, help = "Service Catalog")]
         module: TMF633Modules,
     },
+    TMF637 {
+        #[command(subcommand, help = "Product Inventory")]
+        module: TMF637Modules,
+    },
+    TMF638 {
+        #[command(subcommand, help = "Service Inventory")]
+        module: TMF638Modules,
+    },
+    TMF639 {
+        #[command(subcommand, help = "Resource Inventory")]
+        module: TMF639Modules,
+    },
     TMF645 {
         #[command(subcommand, help = "Service Qualification")]
         module: TMF645Modules,
@@ -126,6 +141,9 @@ fn main() -> Result<(), TMFError> {
         TMFModules::TMF629 { module } => handle_tmf629(&mut client, module, Some(opts), output),
         TMFModules::TMF632 { module } => handle_tmf632(&mut client, module, Some(opts), output),
         TMFModules::TMF633 { module } => handle_tmf633(&mut client, module, Some(opts), output),
+        TMFModules::TMF637 { module } => handle_tmf637(&mut client, module, Some(opts), output),
+        TMFModules::TMF638 { module } => handle_tmf638(&mut client, module, Some(opts), output),
+        TMFModules::TMF639 { module } => handle_tmf639(&mut client, module, Some(opts), output),
         TMFModules::TMF645 { module } => handle_tmf645(&mut client, module, Some(opts), output),
         TMFModules::TMF648 { module } => handle_tmf648(&mut client, module, Some(opts), output),
         TMFModules::TMF674 { module } => handle_tmf674(&mut client, module, Some(opts), output),
