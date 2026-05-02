@@ -3,13 +3,14 @@
 use clap::Subcommand;
 use tmflib::tmf620::catalog::Catalog;
 use tmflib::tmf620::category::Category;
+use tmflib::HasDescription;
 
 use crate::Output;
 
 use super::{display_desc, display_json, display_name, display_opt, iterate_name, TMFOperation};
 
 use tmf_client::common::tmf_error::TMFError;
-use tmf_client::{Operations, QueryOptions, TMFClient};
+use tmf_client::{BlockingOperations, QueryOptions, TMFClient};
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF620Modules {
@@ -46,8 +47,8 @@ pub fn handle_tmf620(
             match op {
                 TMFOperation::Create { name, desc } => {
                     // Create a new object
-                    let catalog = Catalog::new(name);
-                    // .description(desc.unwrap_or_default());
+                    let catalog = Catalog::new(name)
+                    .description(desc.unwrap_or_default());
                     let _new_catalog = client.tmf620().catalog().create(catalog)?;
                     // TODO: display_name(&new_catalog);
                     Ok(())

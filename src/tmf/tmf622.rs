@@ -7,7 +7,7 @@ use super::{display_desc, iterate_desc, TMFOperation};
 
 use crate::Output;
 use tmf_client::common::tmf_error::TMFError;
-use tmf_client::{Operations, QueryOptions, TMFClient};
+use tmf_client::{BlockingOperations, QueryOptions, TMFClient};
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF622Modules {

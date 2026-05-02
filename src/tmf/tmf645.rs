@@ -11,7 +11,7 @@ use crate::Output;
 use super::{display_desc, display_id, display_opt, iterate_desc, TMFOperation};
 
 use tmf_client::common::tmf_error::TMFError;
-use tmf_client::{Operations, QueryOptions, TMFClient};
+use tmf_client::{BlockingOperations, QueryOptions, TMFClient};
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF645Modules {
