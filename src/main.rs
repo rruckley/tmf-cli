@@ -21,7 +21,7 @@ pub enum Output {
     Json,
 }
 
-const HOSTNAME : &str = "https://localhost:8001";
+const HOSTNAME : &str = "https://localhost";
 
 #[derive(Parser, Debug)]
 #[command(
