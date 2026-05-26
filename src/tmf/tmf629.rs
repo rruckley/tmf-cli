@@ -8,7 +8,7 @@ use crate::Output;
 use super::{display_name, display_opt, iterate_name, TMFOperation};
 
 use tmf_client::common::tmf_error::TMFError;
-use tmf_client::{Operations, QueryOptions, TMFClient};
+use tmf_client::{BlockingOperations, QueryOptions, TMFClient};
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF629Modules {

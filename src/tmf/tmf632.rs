@@ -3,6 +3,7 @@
 use clap::Subcommand;
 use tmflib::tmf632::individual_v4::Individual;
 use tmflib::tmf632::organization_v4::Organization;
+// use tmflib::HasDescription;
 
 use crate::Output;
 
@@ -10,7 +11,7 @@ use crate::Output;
 use super::{display_name, display_opt, iterate_name, TMFOperation};
 
 use tmf_client::common::tmf_error::TMFError;
-use tmf_client::{Operations, QueryOptions, TMFClient};
+use tmf_client::{BlockingOperations, QueryOptions, TMFClient};
 
 #[derive(Subcommand, Clone, Debug)]
 pub enum TMF632Modules {
@@ -63,6 +64,7 @@ pub fn handle_tmf632(
             match op {
                 TMFOperation::Create { name, desc } => {
                     let organization = Organization::new(name);
+                    // .description(desc.unwrap_or_default());
                     let new_org = client.tmf632().organization().create(organization)?;
                     display_name(&new_org);
                     Ok(())
